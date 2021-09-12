@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-sudo passwd ubuntu
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt update -y
+sudo apt upgrade -y
+
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+
+sudo apt install python3.9 python3.9-dev python3.9-venv -y
+
+$(which python3.9) -m ensurepip --default-pip --user
 
 ./zsh-install.sh
 
