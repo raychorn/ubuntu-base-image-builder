@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  nagios4:
+    image: ubuntu:focal
+    container_name: nagios4
+    environment:
+      - TZ=America/Denver
+    ports: 
+      - "8080:80"
+    volumes:
+      - ${CWD}:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    tty: true
+    stdin_open: true
+    #command: ["/workspaces/entrypoint.sh"]
+    logging:
+        options:
+            max-size: 1g
+    restart: unless-stopped
