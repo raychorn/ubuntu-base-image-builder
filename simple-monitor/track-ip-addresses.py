@@ -3,6 +3,8 @@ import sys
 import json
 import requests
 
+import dns.resolver
+
 CWD = os.path.dirname(os.path.realpath(__file__))
 
 FNAME = 'database.json'
@@ -18,7 +20,7 @@ else:
 
 ip_addresses = data['ip_addresses']
 
-assert len(sys.argv) == 3, 'Usage: track-ip-addresses.py <ip-address> <count>'
+assert len(sys.argv) >= 3, '({} --> {}) Usage: track-ip-addresses.py <ip-address> <count>'.format(len(sys.argv), sys.argv[1:])
 
 if (sys.argv[1] == '--ips'):
     url = sys.argv[-1]
@@ -30,6 +32,10 @@ if (sys.argv[1] == '--ips'):
     if (len(missing) > 0):
         for ip in missing:
             requests.post(url, data={'text': '{} is offline or down'.format(ip)}, headers = {"Content-type": "application/json"})
+    answers = dns.resolver.query('web-service.org', 'A')
+    print(' query qname:', answers.qname, ' num ans.', len(answers))
+    for rdata in answers:
+        print(' cname target address:', rdata.target, ' address:', rdata.address)
     sys.exit(0)
 else:
     ip = sys.argv[1]
