@@ -32,10 +32,14 @@ if (sys.argv[1] == '--ips'):
     if (len(missing) > 0):
         for ip in missing:
             requests.post(url, data={'text': '{} is offline or down'.format(ip)}, headers = {"Content-type": "application/json"})
-    answers = dns.resolver.query('web-service.org', 'A')
-    print(' query qname:', answers.qname, ' num ans.', len(answers))
-    for rdata in answers:
-        print(' cname target address:', rdata.target, ' address:', rdata.address)
+    try:
+        answers = dns.resolver.query('web-service.org', 'A')
+        print(' query qname:', answers.qname, ' num ans.', len(answers))
+        for rdata in answers:
+            print(' cname target address:', rdata.target, ' address:', rdata.address)
+    except Exception as ex:
+        #print('ERROR:', ex)
+        pass
     sys.exit(0)
 else:
     ip = sys.argv[1]
