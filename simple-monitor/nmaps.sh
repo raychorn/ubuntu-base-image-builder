@@ -32,6 +32,7 @@ while true; do
     NMAPS=$(nmap 10.0.0.0/24 -n -sP | grep report | awk '{print $5}')
 
     while IFS= read -r line; do
+        MAC=$(sudo nmap -sP -PE -PA21,23,80,3389 $line | grep MAC | awk '{print $3}')
         ping -w 30 -c 1 $line > /dev/null
         if [ $? -eq 0 ]
         then 
@@ -57,6 +58,10 @@ while true; do
             echo "i -> $i"
             curl -X POST -H 'Content-type: application/json' --data '{"text":"$line is down"}' $SLACK
             $PY $DIR0/track-ip-addresses.py $line $i
+        fi
+        if [[ $MAC =~ ^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$ ]]; then
+            echo "Issuing wakeonlan for $MAC"
+            wakeonlan $MAC
         fi
         IPS="$IPS$line,"
     done <<< "$NMAPS"

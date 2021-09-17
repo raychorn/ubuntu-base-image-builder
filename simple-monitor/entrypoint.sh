@@ -27,6 +27,8 @@ apt install nmap -y
 
 apt install curl wget unzip gpg -y
 
+apt-get install wakeonlan -y
+
 export DEBIAN_FRONTEND=noninteractive
 export TZ=America/Denver
 
