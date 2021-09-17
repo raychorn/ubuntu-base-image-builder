@@ -7,7 +7,7 @@ from ipaddress import ip_address
 
 from read_zone_file import get_zone_records
 
-print('\n'.join(sys.path))
+#print('\n'.join(sys.path))
 
 import dns.resolver as dns_resolver
 
