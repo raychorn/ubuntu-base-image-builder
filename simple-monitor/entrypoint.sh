@@ -143,6 +143,7 @@ else
         $PIP3 install python-dotenv
         $PIP3 install requests
         $PIP3 install ujson
+        $PIP3 install dnspython
         $PIP3 freeze > $REQS
     else
         echo "ERROR: Cannot configure AWS from .env using $PYFILE.  Cannot continue."

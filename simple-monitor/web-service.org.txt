@@ -1,0 +1,37 @@
+$ORIGIN web-service.org.
+@	3600	IN	SOA	ns41.cloudns.net. support.cloudns.net. 2021091501 7200 1800 1209600 3600
+@	3600	IN	NS	ns41.cloudns.net.
+@	3600	IN	NS	ns42.cloudns.net.
+@	3600	IN	NS	ns43.cloudns.net.
+@	3600	IN	NS	ns44.cloudns.net.
+www	300	IN	A	107.2.148.169
+tweepy	600	IN	CNAME	www.web-service.org.
+vyperapi	600	IN	CNAME	www.web-service.org.
+auth	600	IN	CNAME	www.web-service.org.
+_mongodb._tcp.mongodb-cluster1	600	IN	SRV	0 0 65317 127.0.0.1.
+_mongodb._tcp.mongodb-cluster1	600	IN	SRV	0 0 65417 127.0.0.1.
+_mongodb._tcp.mongodb-cluster1	600	IN	SRV	0 0 65117 127.0.0.1.
+_mongodb._tcp.mongodb-cluster1	600	IN	SRV	0 0 65217 127.0.0.1.
+mongodb-cluster1	600	IN	TXT	"authSource=admin&replicaSet=rs0"
+controller	300	IN	A	10.0.0.196
+docker1	300	IN	A	10.0.0.233
+docker2	300	IN	A	10.0.0.240
+iscsi	300	IN	A	10.0.0.77
+server1	300	IN	A	10.0.0.179
+tower	300	IN	A	10.0.0.164
+tower-10	300	IN	A	10.0.2.3
+tp01-2066	300	IN	A	10.0.0.239
+ubuntu-desktop-vm	300	IN	A	10.0.0.46
+windows-vm1	300	IN	A	10.0.0.44
+windows-vm2	300	IN	A	10.0.0.45
+z820	300	IN	A	10.0.0.177
+z820-10	300	IN	A	10.0.2.2
+app1	300	IN	A	3.135.70.144
+a1c1	300	IN	CNAME	container-service-1.283prshqvcbus.us-east-2.cs.amazonlightsail.com.
+_32d04a989ea1eb2480a61d0e0d93beb2.a1c1	300	IN	CNAME	_28957f5dbef71036cd9c80a6fe8fe579.tjxrvlrcqj.acm-validations.aws.
+_4bc903933388e4e10504d5393f6e8df1.a1c3	300	IN	CNAME	_d630e89532e7d685347d09df14f74d83.tjxrvlrcqj.acm-validations.aws.
+_2a76ed0612c6ddbf95cc999a0f27c3ee.a1c4	300	IN	CNAME	_980601b6f4be91a80bb829e664423c1c.tjxrvlrcqj.acm-validations.aws.
+_472aac7348e669e50ea0b46bd84273c9.a1c5	300	IN	CNAME	_0868fdb79e6e56e73f234c935114ce8b.tjxrvlrcqj.acm-validations.aws.
+_8288419590b22a55e0714c2002eaab99.a1c2	300	IN	CNAME	_50d2b71c8e81afbbfc020d013c9cf5d0.tjxrvlrcqj.acm-validations.aws.
+securex1	300	IN	A	10.0.0.250
+_3ed5ea3317ac87d3d89c1f591f3f7a2d	300	IN	CNAME	a9ed8605b64557b5c804f036529f6a69.fb687128fdac280fb3e14bed738cdca8.05f0935e5615854ff3.comodoca.com.
