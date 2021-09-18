@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import re
+import time
 import requests
 
 import dotenv
@@ -45,11 +46,21 @@ assert isinstance(SLICK, str) and (len(SLICK) > 0), 'SLICK is not set in {}'.for
 url = unobscure(SLICK.encode()).decode()
 print('DEBUG: url: {}'.format(url))
 
+TEST_SLACK_TIME = int(os.environ.get('TEST_SLACK_TIME', '0'))
+assert isinstance(TEST_SLACK_TIME, int) and (TEST_SLACK_TIME >= 0) and (TEST_SLACK_TIME <= 59), 'TEST_SLACK_TIME is not set in {}'.format(fp_env)
+
 CWD = os.path.dirname(os.path.realpath(__file__))
 
 FNAME = 'database.json'
 
 FPATH = os.path.join(CWD, FNAME)
+
+current_time_mins = time.now().minute
+
+if (current_time_mins == TEST_SLACK_TIME):
+    r = requests.post(url, json={'text': 'TEST.1: Just saying HI.'}, headers = {"Content-type": "application/json"})
+    print('TEST-STATUS: {}'.format(r.status_code))
+    assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
 
 
 def initialize_data():
@@ -117,6 +128,7 @@ if (sys.argv[1] == '--ips'):
                 continue
             r = requests.post(url, json={'text': 'ALERT.1: {} is offline or down'.format(_ip)}, headers = {"Content-type": "application/json"})
             print('STATUS: {}'.format(r.status_code))
+            assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
 
     for ip,_domain in ip_domains.items():
         if (ip_address(ip).is_private) and (ip.find(default) > -1):
@@ -131,6 +143,7 @@ if (sys.argv[1] == '--ips'):
                     continue
                 r = requests.post(url, json={'text': 'ALERT.2: {} ({}) is offline or down'.format(ip, _domain)}, headers = {"Content-type": "application/json"})
                 print('STATUS: {}'.format(r.status_code))
+                assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
               
     #sys.exit(0)
 else:
