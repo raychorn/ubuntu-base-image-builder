@@ -1,6 +1,15 @@
 import os
 import ujson
 
+import zlib
+from base64 import urlsafe_b64encode as b64e, urlsafe_b64decode as b64d
+
+def obscure(data: bytes) -> bytes:
+    return b64e(zlib.compress(data, 9))
+
+def unobscure(obscured: bytes) -> bytes:
+    return zlib.decompress(b64d(obscured))
+
 def get_zone_records(zonefile, domain="web-service.org", interested_in=['A'], invert=False):
     import dns.zone
     from dns.exception import DNSException

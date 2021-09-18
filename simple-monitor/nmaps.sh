@@ -11,11 +11,6 @@ ENVPATH=$DIR0/.env
 
 export $(cat $ENVPATH | sed 's/#.*//g' | xargs)
 
-if [ -z "$SLACK" ]; then
-    echo "SLACK is not set in ENVPATH:$ENVPATH"
-    exit 1
-fi
-
 VENV=$(ls ../.venv*/bin/activate)
 
 if [ ! -f "$VENV" ]; then
@@ -59,7 +54,7 @@ while true; do
             fi
             i=(${Activities[$line]})
             echo "i -> $i"
-            $PY $DIR0/track-ip-addresses.py $line $i "+1"
+            $PY $DIR0/track-ip-addresses.py $line $i "+1" $MAC $DEFAULT
         else
             echo "$line is down"
             i=(${Activities[$line]})
@@ -70,17 +65,12 @@ while true; do
             fi
             i=(${Activities[$line]})
             echo "i -> $i"
-            curl -X POST -H 'Content-type: application/json' --data '{"text":"$line is down"}' $SLACK
-            $PY $DIR0/track-ip-addresses.py $line $i "-1"
-        fi
-        if [[ $MAC =~ ^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$ ]]; then
-            echo "Issuing wakeonlan for $MAC"
-            wakeonlan $MAC
+            $PY $DIR0/track-ip-addresses.py $line $i "-1" $MAC $DEFAULT
         fi
         IPS="$IPS$line,"
     done <<< "$NMAPS"
     echo "IPS:$IPS"
-    $PY $DIR0/track-ip-addresses.py --ips $IPS $SLACK $DEFAULT
+    $PY $DIR0/track-ip-addresses.py --ips $IPS $DEFAULT
     echo "---------------------------------------------------------"
 done
 

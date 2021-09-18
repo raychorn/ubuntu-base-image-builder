@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import re
 import requests
 
 import dotenv
@@ -8,6 +9,10 @@ import dotenv
 from ipaddress import ip_address
 
 from read_zone_file import get_zone_records
+
+from read_zone_file import unobscure
+
+from wakeonlan import send_magic_packet
 
 #print('\n'.join(sys.path))
 
@@ -28,6 +33,17 @@ ALERT_THRESHOLD = int(os.environ.get('ALERT_THRESHOLD', '15'))
 assert isinstance(ALERT_THRESHOLD, int) and (ALERT_THRESHOLD >= 1) and (ALERT_THRESHOLD <= 99), 'ALERT_THRESHOLD is not set in {}'.format(fp_env)
 
 print('DEBUG: ALERT_THRESHOLD: {}'.format(ALERT_THRESHOLD))
+
+WAKE_ON_LAN = os.environ.get('WAKE_ON_LAN')
+assert isinstance(WAKE_ON_LAN, str) and (len(WAKE_ON_LAN) > 0), 'WAKE_ON_LAN is not set in {}'.format(fp_env)
+
+is_WAKE_ON_LAN_all = WAKE_ON_LAN.lower() == 'all'
+
+SLICK = os.environ.get('SLICK')
+assert isinstance(SLICK, str) and (len(SLICK) > 0), 'SLICK is not set in {}'.format(fp_env)
+
+url = unobscure(SLICK.encode()).decode()
+print('DEBUG: url: {}'.format(url))
 
 CWD = os.path.dirname(os.path.realpath(__file__))
 
@@ -70,28 +86,27 @@ def tally_event_for(ip, event, data={}): # data is ip_addresses (dict)
     return bucket.get(event, 0)
 
 
+default = sys.argv[-1]
+assert len(default) > 0, 'Usage: track-ip-addresses.py <ip-address> <count> <url> <default-network>'
+print('DEBUG: default: {}'.format(default))
+default = '.'.join(default.split('.')[0:-1])
+
 def zone_sub_domains():
     zone_recs = get_zone_records("./{}.txt".format(DOMAIN), domain=DOMAIN, interested_in=['A'], invert=True)
     for ip,_domain in zone_recs.items():
         if (ip_address(ip).is_private) and (ip.find(default) > -1):
             yield ip,_domain
 
+ip_domains = dict([tuple([ip,_domain]) for ip,_domain in zone_sub_domains()])
 
 if (sys.argv[1] == '--ips'):
-    url = sys.argv[-2]
     assert len(url) > 0, 'Usage: track-ip-addresses.py <ip-address> <count> <url> <default-network>'
     print('DEBUG: url: {}'.format(url))
-
-    default = sys.argv[-1]
-    assert len(default) > 0, 'Usage: track-ip-addresses.py <ip-address> <count> <url> <default-network>'
-    print('DEBUG: default: {}'.format(default))
-    default = '.'.join(default.split('.')[0:-1])
 
     ips = [ip for ip in sys.argv[2].split(',') if (len(ip) > 0)]
     keys = list(ip_addresses.keys())
     missing = list(set(keys) - set(ips))
 
-    ip_domains = dict([tuple([ip,_domain]) for ip,_domain in zone_sub_domains()])
     if (len(missing) > 0):
         for _ip in missing:
             if (not _ip in list(ip_domains.keys())):
@@ -114,7 +129,7 @@ if (sys.argv[1] == '--ips'):
                 num = tally_event_for(ip, alerts_event, data=ip_addresses)
                 if (num > ALERT_THRESHOLD):
                     continue
-                r = requests.post(url, json={'text': 'ALERT.2: {} ({}) is offline or down'.format(ip, domain)}, headers = {"Content-type": "application/json"})
+                r = requests.post(url, json={'text': 'ALERT.2: {} ({}) is offline or down'.format(ip, _domain)}, headers = {"Content-type": "application/json"})
                 print('STATUS: {}'.format(r.status_code))
               
     #sys.exit(0)
@@ -122,7 +137,14 @@ else:
     ip = sys.argv[1]
     cnt = int(sys.argv[2])
     delta = sys.argv[3]
-    #print('ip: {}, delta: {}, data={}'.format(ip, delta, ip_addresses))
+    mac_address = sys.argv[4]
+    is_wakeonlan = is_WAKE_ON_LAN_all
+    is_mac = re.match(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', mac_address)
+    if (ip in list(ip_domains.keys())):
+        is_wakeonlan = (is_mac is not None) and (delta == "+1")
+    print('DEBUG: ip: {}, delta: {}, is_wakeonlan={}, is_mac={}'.format(ip, delta, is_wakeonlan, is_mac))
+    if (is_wakeonlan):
+        send_magic_packet(mac_address)
     tally_event_for(ip, delta, data=ip_addresses)
 
 with open(FPATH, 'w') as f:
