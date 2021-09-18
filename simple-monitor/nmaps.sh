@@ -7,7 +7,14 @@ if [ "$DIR0." == ".." ]; then
     DIR0=$PWD
 fi
 
-SLACK=https://hooks.slack.com/services/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
+ENVPATH=$DIR0/.env
+
+export $(cat $ENVPATH | sed 's/#.*//g' | xargs)
+
+if [ -z "$SLACK" ]; then
+    echo "SLACK is not set in ENVPATH:$ENVPATH"
+    exit 1
+fi
 
 VENV=$(ls ../.venv*/bin/activate)
 
@@ -25,6 +32,8 @@ if [ ! -f "$PY" ]; then
     echo "$PY not found. Please fix."
     exit 1
 fi
+
+DEFAULT=$(ip r | grep default | awk '{print $3}')
 
 declare -A Activities
 
@@ -50,7 +59,7 @@ while true; do
             fi
             i=(${Activities[$line]})
             echo "i -> $i"
-            $PY $DIR0/track-ip-addresses.py $line $i
+            $PY $DIR0/track-ip-addresses.py $line $i "+1"
         else
             echo "$line is down"
             i=(${Activities[$line]})
@@ -62,7 +71,7 @@ while true; do
             i=(${Activities[$line]})
             echo "i -> $i"
             curl -X POST -H 'Content-type: application/json' --data '{"text":"$line is down"}' $SLACK
-            $PY $DIR0/track-ip-addresses.py $line $i
+            $PY $DIR0/track-ip-addresses.py $line $i "-1"
         fi
         if [[ $MAC =~ ^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$ ]]; then
             echo "Issuing wakeonlan for $MAC"
@@ -71,9 +80,8 @@ while true; do
         IPS="$IPS$line,"
     done <<< "$NMAPS"
     echo "IPS:$IPS"
-    $PY $DIR0/track-ip-addresses.py --ips $IPS $SLACK
+    $PY $DIR0/track-ip-addresses.py --ips $IPS $SLACK $DEFAULT
     echo "---------------------------------------------------------"
-
 done
 
 echo "Done."
