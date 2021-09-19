@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+  simple-ip-monitor:
+    image: 10.0.0.164:5000/simple-ip-monitor:3.9.7.2
+    container_name: simple-ip-monitor
+    environment:
+      - TZ=America/Denver
+    volumes:
+      - monitor_data:/monitor_data
+    tty: true
+    stdin_open: true
+    command: ["/workspaces/nmaps.sh"]
+    logging:
+        options:
+            max-size: 1g
+    deploy:
+      resources:
+         limits:
+           cpus: 0.50
+           memory: 512M
+      replicas: 1
+    network_mode: host
+    restart: always
+
+volumes:
+  monitor_data:
