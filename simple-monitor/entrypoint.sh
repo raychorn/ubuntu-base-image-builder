@@ -155,6 +155,34 @@ fi
 ###  END!!! Simulated Build Environment  ########
 #################################################
 
+MONITOR_FPATH=/var/lib/docker/volumes/monitor_workspace/_data
+
+if [ ! -d "$MONITOR_FPATH" ]; then
+    echo "Missing $MONITOR_FPATH, cannot continue."
+    sleeping
+fi
+
+ENV_FILE=$DIR0/.env
+cat << ENV_FILE_EOF > $ENV_FILE
+MONITOR_FPATH=/var/lib/docker/volumes/monitor_workspace/_data
+
+SLICK=eNrLKCkpKLbS18_Iz88u1ivOSUzO1kvOz9UvTi0qy0xOLdYPMTB0DnfzMTc189Z3MjBy8_F28XAKDNRPyjLPzPENCvM2cinOLUgsz0yMcArNDPMHAGuJGvU=
+
+THE_DOMAIN=web-service.org
+
+ALERT_THRESHOLD=10
+
+#WAKE_ON_LAN=ALL
+WAKE_ON_LAN=ZONE
+
+TEST_SLACK_TIME=0
+ENV_FILE_EOF
+
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "ENV_FILE is unavailable.  Please fix."
+    exit 1
+fi
+
 ./nmaps.sh
 
 echo "Done."

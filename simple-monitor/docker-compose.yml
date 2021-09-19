@@ -9,7 +9,7 @@ services:
     ports: 
       - "8080:80"
     volumes:
-      - ${CWD}:/workspace
+      - monitor_workspace:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
     tty: true
@@ -19,3 +19,7 @@ services:
         options:
             max-size: 1g
     restart: unless-stopped
+
+  volumes: 
+    - name: monitor_workspace
+      driver: local
