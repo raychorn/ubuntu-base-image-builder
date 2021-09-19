@@ -14,6 +14,10 @@ export $(cat $ENVPATH | sed 's/#.*//g' | xargs)
 VENV=$(ls ../.venv*/bin/activate)
 
 if [ ! -f "$VENV" ]; then
+    VENV=$(ls ./.venv*/bin/activate)
+fi
+
+if [ ! -f "$VENV" ]; then
     echo "Virtualenv not found. Please fix."
     exit 1
 fi

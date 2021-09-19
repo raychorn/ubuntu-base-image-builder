@@ -191,6 +191,8 @@ docker cp /workspaces/makevenv.sh $CID:/workspaces/.
 docker exec -it $CID bash -c "mkdir -p /workspaces/scripts/utils"
 docker cp /workspaces/scripts/utils/sort.py $CID:/workspaces/scripts/utils/.
 
+docker exec -it $CID bash -c "chmod +x /workspaces/makevenv.sh && /workspaces/makevenv.sh"
+
 echo "Done."
 
 sleeping
