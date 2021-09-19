@@ -113,27 +113,30 @@ PYTEST=$(whereis python)
 
 find_python python
 
-#echo ${ARRAY[@]}
 v=$($python39 ./scripts/utils/sort.py "${ARRAY[@]}")
-#echo "17. Use this -> $v"
-ARRAY=()
-ARRAY2=()
-for val in $v; do
-    ARRAY+=($val)
-    x=$($val -c 'import sys; i=sys.version_info; print("{}.{}.{}".format(i.major,i.minor,i.micro))')
-    ARRAY2+=("$val $x")
-done
-#echo "(1) ${ARRAY[@]}"
-#echo "(2) ${ARRAY2[@]}"
 
-PS3="Choose: "
+HOSTNAME=$(hostname | grep alienware)
 
-select option in "${ARRAY2[@]}";
-do
-    echo "Selected number: $REPLY"
-    choice=${ARRAY[$REPLY-1]}
-    break
-done
+if [[ ! -z $HOSTNAME ]]; then
+    ARRAY=()
+    ARRAY2=()
+    for val in $v; do
+        ARRAY+=($val)
+        x=$($val -c 'import sys; i=sys.version_info; print("{}.{}.{}".format(i.major,i.minor,i.micro))')
+        ARRAY2+=("$val $x")
+    done
+
+    PS3="Choose: "
+
+    select option in "${ARRAY2[@]}";
+    do
+        echo "Selected number: $REPLY"
+        choice=${ARRAY[$REPLY-1]}
+        break
+    done
+else
+    choice=$($v | tail -1 | awk '{print $1}')
+fi
 
 if [[ -f $choice ]]; then
     echo "18. Found $choice"
