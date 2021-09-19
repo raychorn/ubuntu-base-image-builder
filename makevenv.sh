@@ -33,7 +33,7 @@ python39=$(which python3.9)
 export DEBIAN_FRONTEND=noninteractive
 export TZ=America/Denver
 
-apt-get install -y tzdata wget curl
+apt-get install -y tzdata
 
 if [[ -f $python39 ]]
 then
@@ -67,6 +67,13 @@ then
             echo "10. Installing pip3"
             GETPIP=$DIR0/get-pip.py
 
+            if [[ ! -f $GETPIP ]]
+            then
+                echo "12. $GETPIP does not exist so downloading it."
+                apt-get install -y wget curl
+                wget https://bootstrap.pypa.io/get-pip.py -O $GETPIP
+            fi
+
             if [[ -f $GETPIP ]]
             then
                 $python39 $GETPIP
@@ -78,9 +85,6 @@ then
                     setuptools="1"
                     $pip3 install --upgrade setuptools > /dev/null 2>&1
                 fi
-            else
-                echo "12. $GETPIP does not exist so downloading it."
-                wget https://bootstrap.pypa.io/get-pip.py -O $GETPIP
             fi
         fi
     fi
@@ -137,16 +141,17 @@ if [[ ! -z $HOSTNAME ]]; then
         choice=${ARRAY[$REPLY-1]}
         break
     done
+
+    if [[ -f $choice ]]; then
+        echo "18. Found $choice"
+    else
+        echo "19. $choice not found"
+        exit 1
+    fi
 else
-    choice=$(which python3.9)
+    choice=$python39
 fi
 
-if [[ -f $choice ]]; then
-    echo "18. Found $choice"
-else
-    echo "19. $choice not found"
-    exit 1
-fi
 version=$($choice --version)
 echo "Use this -> $choice --> $version"
 
