@@ -33,7 +33,7 @@ python39=$(which python3.9)
 export DEBIAN_FRONTEND=noninteractive
 export TZ=America/Denver
 
-apt-get install -y tzdata
+apt-get install -y tzdata wget curl
 
 if [[ -f $python39 ]]
 then
@@ -78,6 +78,9 @@ then
                     setuptools="1"
                     $pip3 install --upgrade setuptools > /dev/null 2>&1
                 fi
+            else
+                echo "12. $GETPIP does not exist so downloading it."
+                wget https://bootstrap.pypa.io/get-pip.py -O $GETPIP
             fi
         fi
     fi
@@ -135,8 +138,7 @@ if [[ ! -z $HOSTNAME ]]; then
         break
     done
 else
-    choice=$($v | tail -1 | awk '{print $1}')
-    choice=$(ls $choice)
+    choice=$(which python3.9)
 fi
 
 if [[ -f $choice ]]; then
