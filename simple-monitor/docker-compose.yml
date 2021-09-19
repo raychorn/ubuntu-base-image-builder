@@ -21,4 +21,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  monitor_workspace: {}
+  monitor_workspace:
