@@ -12,5 +12,5 @@ echo "CWD:$CWD"
 
 export CWD=$CWD
 
-docker-compose -f ./docker-deployer-compose.yml up -d
+docker-compose -f ./docker-deployer-compose.yml down --remove-orphans
   
