@@ -68,10 +68,12 @@ while true; do
             $PY $DIR0/track-ip-addresses.py $line $i "-1" $MAC $DEFAULT
         fi
         IPS="$IPS$line,"
+        sleep 5s
     done <<< "$NMAPS"
     echo "IPS:$IPS"
     $PY $DIR0/track-ip-addresses.py --ips $IPS $DEFAULT
     echo "---------------------------------------------------------"
+    sleep 5s
 done
 
 echo "Done."
