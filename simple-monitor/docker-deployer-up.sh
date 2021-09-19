@@ -18,6 +18,6 @@ export CWD=$CWD
 if [ -z "$CID" ]; then
     docker-compose -f ./docker-deployer-compose.yml up -d
 else
-    docker-compose -f ./docker-deployer-compose.yml down
+    docker-compose -f ./docker-deployer-compose.yml down --remove-orphans
 fi
   

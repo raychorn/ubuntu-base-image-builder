@@ -184,6 +184,9 @@ else
     echo "Container $CNAME started with ID $CID"
 fi
 
+docker exec -it $CID bash -c "mkdir -p /workspaces"
+for FILE in ./*; do docker cp $FILE $CID:/workspaces; done
+
 echo "Done."
 
 sleeping
