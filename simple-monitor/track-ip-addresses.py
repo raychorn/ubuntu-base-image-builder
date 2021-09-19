@@ -55,7 +55,12 @@ CWD = os.path.dirname(os.path.realpath(__file__))
 
 FNAME = 'database.json'
 
-FPATH = os.path.join(CWD, FNAME)
+CWD = os.environ.get('MONITOR_FPATH', CWD)
+
+if (not os.path.exists(CWD)):
+    os.makedirs(CWD)
+
+FPATH = os.path.join(os.environ.get('MONITOR_FPATH', CWD), FNAME)
 
 # get current time in minutes
 now = datetime.datetime.now()
