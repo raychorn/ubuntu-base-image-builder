@@ -174,7 +174,7 @@ fi
 cd $INSTALLER
 docker-compose -f ./docker-compose.yml up -d
 
-CNAME=simple-monitor
+CNAME=simple-ip-monitor
 CID=$(docker ps | grep $CNAME | awk '{print $1}')
 
 if [ -z "$CID" ]; then
@@ -185,7 +185,7 @@ else
 fi
 
 docker exec -it $CID bash -c "mkdir -p /workspaces"
-for FILE in ./*; do docker cp $FILE $CID:/workspaces; done
+for FILE in ./*; do docker cp $FILE $CID:/workspaces/.; done
 
 echo "Done."
 
