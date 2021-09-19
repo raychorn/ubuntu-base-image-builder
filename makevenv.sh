@@ -30,6 +30,11 @@ find_python(){
 
 python39=$(which python3.9)
 
+export DEBIAN_FRONTEND=noninteractive
+export TZ=America/Denver
+
+apt-get install -y tzdata
+
 if [[ -f $python39 ]]
 then
     echo "7. Found $python39"
