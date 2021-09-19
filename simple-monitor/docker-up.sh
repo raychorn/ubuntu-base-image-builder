@@ -16,8 +16,8 @@ CID=$(docker ps | grep $CNAME | awk '{print $1}')
 export CWD=$CWD
 
 if [ -z "$CID" ]; then
-    docker-compose up -d
+    docker-compose -f ./docker-compose.yml up -d
 else
-    docker-compose down
+    docker-compose -f ./docker-compose.yml down
 fi
   
