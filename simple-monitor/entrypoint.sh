@@ -155,7 +155,7 @@ fi
 ###  END!!! Simulated Build Environment  ########
 #################################################
 
-MONITOR_FPATH=/var/lib/docker/volumes/monitor_workspace/_data
+MONITOR_FPATH=/var/lib/docker/volumes/monitor_data/_data
 
 if [ ! -d "$MONITOR_FPATH" ]; then
     echo "Missing $MONITOR_FPATH, cannot continue."
@@ -164,7 +164,7 @@ fi
 
 ENV_FILE=$DIR0/.env
 cat << ENV_FILE_EOF > $ENV_FILE
-MONITOR_FPATH=/var/lib/docker/volumes/monitor_workspace/_data
+MONITOR_FPATH=/var/lib/docker/volumes/monitor_data/_data
 
 SLICK=eNrLKCkpKLbS18_Iz88u1ivOSUzO1kvOz9UvTi0qy0xOLdYPMTB0DnfzMTc189Z3MjBy8_F28XAKDNRPyjLPzPENCvM2cinOLUgsz0yMcArNDPMHAGuJGvU=
 
