@@ -187,6 +187,10 @@ fi
 docker exec -it $CID bash -c "mkdir -p /workspaces"
 for FILE in ./*; do docker cp $FILE $CID:/workspaces/.; done
 
+docker cp /workspaces/makevenv.sh $CID:/workspaces/.
+docker exec -it $CID bash -c "mkdir -p /workspaces/scripts/utils"
+docker cp /workspaces/scripts/utils/sort.py $CID:/workspaces/scripts/utils/.
+
 echo "Done."
 
 sleeping
