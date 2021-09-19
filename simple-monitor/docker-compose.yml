@@ -20,6 +20,5 @@ services:
             max-size: 1g
     restart: unless-stopped
 
-  volumes: 
-    - name: monitor_workspace
-      driver: local
+volumes:
+  monitor_workspace: {}
