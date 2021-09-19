@@ -61,14 +61,13 @@ current_time = (now.minute * 60) + now.second
 current_time_secs = (now.hour * 3600) + (now.minute * 60) + now.second
 expected_secs_since_last_checkin = 3600
 
-if (current_time == TEST_SLACK_TIME):
-    LAST_SLACK_TIME_CHECKIN = int(os.environ.get('LAST_SLACK_TIME_CHECKIN', str(current_time_secs - expected_secs_since_last_checkin)))
-    if (current_time_secs - LAST_SLACK_TIME_CHECKIN) >= expected_secs_since_last_checkin:
+LAST_SLACK_TIME_CHECKIN = int(os.environ.get('LAST_SLACK_TIME_CHECKIN', str(current_time_secs)))
+if (current_time == TEST_SLACK_TIME) or ((current_time_secs - LAST_SLACK_TIME_CHECKIN) >= expected_secs_since_last_checkin):
+    if ((current_time_secs - LAST_SLACK_TIME_CHECKIN) >= expected_secs_since_last_checkin):
         r = requests.post(url, json={'text': 'TEST.1: Just saying HI. {}'.format(now)}, headers = {"Content-type": "application/json"})
         print('TEST-STATUS: {}'.format(r.status_code))
         assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
-        os.environ[LAST_SLACK_TIME_CHECKIN] = str(current_time_secs)
-
+        os.environ['LAST_SLACK_TIME_CHECKIN'] = str(current_time_secs)
 
 def initialize_data():
     return {'ip_addresses': {}}
