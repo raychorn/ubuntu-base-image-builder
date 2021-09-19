@@ -172,7 +172,17 @@ else
 fi
 
 cd $INSTALLER
-./docker-up.sh
+docker-compose -f ./docker-compose.yml up -d
+
+CNAME=simple-monitor
+CID=$(docker ps | grep $CNAME | awk '{print $1}')
+
+if [ -z "$CID" ]; then
+    echo "ERROR: $CNAME was not started.  Cannot continue."
+    sleeping
+else
+    echo "Container $CNAME started with ID $CID"
+fi
 
 echo "Done."
 

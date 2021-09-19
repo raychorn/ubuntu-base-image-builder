@@ -9,11 +9,11 @@ services:
     ports: 
       - "8080:80"
     volumes:
-      - ./:/workspace
+      #- ./:/workspace
       - monitor_data:/monitor_data
     tty: true
     stdin_open: true
-    command: ["/workspace/entrypoint.sh"]
+    #command: ["/workspace/entrypoint.sh"]
     logging:
         options:
             max-size: 1g
