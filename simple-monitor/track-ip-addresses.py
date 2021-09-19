@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import re
-import time
+import datetime
 import requests
 
 import dotenv
@@ -48,6 +48,7 @@ print('DEBUG: url: {}'.format(url))
 
 TEST_SLACK_TIME = int(os.environ.get('TEST_SLACK_TIME', '0'))
 assert isinstance(TEST_SLACK_TIME, int) and (TEST_SLACK_TIME >= 0) and (TEST_SLACK_TIME <= 59), 'TEST_SLACK_TIME is not set in {}'.format(fp_env)
+TEST_SLACK_TIME = float(TEST_SLACK_TIME)
 
 CWD = os.path.dirname(os.path.realpath(__file__))
 
@@ -55,10 +56,12 @@ FNAME = 'database.json'
 
 FPATH = os.path.join(CWD, FNAME)
 
-current_time_mins = time.now().minute
+# get current time in minutes
+now = datetime.datetime.now()
+current_time = (now.minute * 60.0) + now.second + (now.microsecond / 1000000)
 
-if (current_time_mins == TEST_SLACK_TIME):
-    r = requests.post(url, json={'text': 'TEST.1: Just saying HI.'}, headers = {"Content-type": "application/json"})
+if (current_time == TEST_SLACK_TIME):
+    r = requests.post(url, json={'text': 'TEST.1: Just saying HI. {}'.format(now)}, headers = {"Content-type": "application/json"})
     print('TEST-STATUS: {}'.format(r.status_code))
     assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
 
