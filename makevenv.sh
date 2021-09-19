@@ -136,6 +136,7 @@ if [[ ! -z $HOSTNAME ]]; then
     done
 else
     choice=$($v | tail -1 | awk '{print $1}')
+    choice=$(ls $choice)
 fi
 
 if [[ -f $choice ]]; then
