@@ -1,9 +1,11 @@
 import os
 import sys
 import json
-import re
+import time
 import datetime
 import requests
+
+import re
 
 import dotenv
 
@@ -150,6 +152,7 @@ if (sys.argv[1] == '--ips'):
                 r = requests.post(url, json={'text': 'ALERT.2: {} ({}) is offline or down'.format(ip, _domain)}, headers = {"Content-type": "application/json"})
                 print('STATUS: {}'.format(r.status_code))
                 assert r.status_code == 200, 'TEST-STATUS: {}'.format(r.status_code)
+            time.sleep(5)
               
     #sys.exit(0)
 else:
