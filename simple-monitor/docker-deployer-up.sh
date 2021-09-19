@@ -10,7 +10,7 @@ fi
 
 echo "CWD:$CWD"
 
-CNAME=nagios4
+CNAME=simple-monitor-deployer
 CID=$(docker ps | grep $CNAME | awk '{print $1}')
 
 export CWD=$CWD
