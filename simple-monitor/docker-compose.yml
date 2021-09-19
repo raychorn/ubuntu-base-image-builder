@@ -11,8 +11,6 @@ services:
     volumes:
       - ./:/workspace
       - monitor_data:/monitor_data
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/docker/volumes:/var/lib/docker/volumes
     tty: true
     stdin_open: true
     command: ["/workspace/entrypoint.sh"]

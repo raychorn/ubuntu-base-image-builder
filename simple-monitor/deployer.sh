@@ -162,6 +162,18 @@ fi
 
 git clone https://github.com/raychorn/ubuntu-base-image-builder.git
 
+INSTALLER=/ubuntu-base-image-builder/simple-monitor
+
+if [ -d "$INSTALLER" ]; then
+    echo "Found $INSTALLER"
+else
+    echo "ERROR: $INSTALLER was not found.  Cannot continue."
+    sleeping
+fi
+
+cd $INSTALLER
+./docker-up.sh
+
 echo "Done."
 
 sleeping
